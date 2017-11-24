@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Estacionamento</title>
+	
+    
+	<script src="js/jquery.js"></script>
+	
+
+	<link href="css/bootstrap.min.css" rel=stylesheet></link>
+
+	
+	<script>
+
+	
+		$(document).ready(function(){
+	
+
+			$("#buscarProduto").click(function() {
+				
+				var nomeProduto = $( "#nomeProduto option:selected" ).text();
+				var tamanho = $( "#tamanho option:selected" ).text();
+				var quantidade = $( "#quantidade option:selected" ).text();
+				var comprimento = $( "#comprimento option:selected" ).text();
+				var modelo = $( "#modelo option:selected" ).text();
+					
+				$("#dadosProduto").empty();
+					
+				var url = "/especificacao/"+nomeProduto+"/"+tamanho+"/"+quantidade+"/"+comprimento+"/"+modelo+"";
+					
+				
+
+				$.getJSON(url, function(data) {
+						
+						var itens = [];
+						
+						$.each(data, function(i){
+						
+							itens.push("<tr><td>"+ this.spec.nomeProduto + "</td><td>"+ this.spec.tamanho + "</td><td>"+ this.spec.quantidade + "</td><td>"+ this.spec.comprimento + "</td><td>"+ this.spec.modelo + "</td></tr>");
+							
+						});
+									
+						$("#dadosProduto").append(itens);
+						
+				});
+
+			});
+			
+			
+			
+			$("#buscaCpf").click(function() {
+				
+				var cpf = $("#cpF").val();
+				$("#dadosCliente").empty();
+				var url = "/cliente/"+cpf;
+	
+				$.getJSON(url, function(data) {
+		
+						var itens = [];
+						itens.push("<tr> <td>"+ data.nome +"</td></tr>");		
+						$("#dadosCliente").append(itens);
+						
+				});
+	
+			});
+			
+
+			$("#buscaRegistro").click(function() {	
+				var registroProduto = $("#produtoRegistro").val();
+				$("#dadosRegistro").empty();
+				var url = "/produto/"+registroProduto;
+				$.getJSON(url, function(data) {
+						var itens = [];
+						itens.push("<tr> <td>"+ data.spec.nomeProduto +"</td><td>"+ data.spec.modelo +"</td></tr>");		
+						$("#dadosRegistro").append(itens);
+
+				});
+	
+			});
+			
+			$("#buscarVenda").click(function() {	
+				var registroVenda = $("#vendaRegistro").val();
+				$("#dadosVenda").empty();
+				var url = "/venda/"+registroVenda;
+				$.getJSON(url, function(data) {
+						var itens = [];
+						itens.push("<tr> <td>"+ data.valorVenda +"</td></tr>");		
+						$("#dadosVenda").append(itens);
+
+				});
+	
+			});
+			
+			
+			
+			 $("#adicionarCliente").submit(function() {
+				var nomeCliente = $( '#nomeCliente' ).val();
+				var cpf = $( '#cpf' ).val();
+				var email = $( '#email' ).val();
+				var endereco = $( '#endereco' ).val();
+				var cep = $( '#cep').val();
+				var bairro = $( '#bairro' ).val();
+				var cidade = $( '#cidade' ).val();
+		
+				var url = "/cliente/"+nomeCliente+"/"+cpf+"/"+email+"/"+endereco+"/"+cep+"/"+bairro+"/"+cidade+"";
+				
+
+				$.getJSON(url, function(data) {
+					
+					if(data[0].status == 1){
+						window.location.href = '/statusadicionarCliente.html?success';
+					} else {
+						window.location.href = '/statusadicionarCliente.html?error';
+					}
+						
+				});
+
+			});
+			 
+			 <!-- Novo formulario -->
+			 
+			 $("#adicionarProduto").submit(function() {
+					var registroProduto = $( '#registroProduto' ).val();
+					var nomeProduto = $( '#nomeProduto' ).val();
+					var tamanho = $( '#tamanho' ).val();
+					var quantidade = $( '#quantidade' ).val();
+					var comprimento = $( '#comprimento').val();
+					var modelo = $( '#modelo' ).val();
+					var url = "/produto/"+registroProduto+"/"+nomeProduto+"/"+tamanho+"/"+quantidade+"/"+comprimento+"/"+modelo+"";
+					alert(url);
+					
+
+					$.getJSON(url, function(data) {
+						
+						if(data[0].status == 1){
+							window.location.href = '/statusadicionarCliente.html?success';
+						} else {
+							window.location.href = '/statusadicionarCliente.html?error';
+						}
+							
+					});
+
+				});
+				
+			
+		}); 
+		
+		
+		
+	
+		</script>
+
+   
+  </head>
+
+
+  <body>
+  
+  				<!--CADASTRO CLIENTE-->
+	<br>
+	<br>
+	<form class="form-horizontal" method="get" id="adicionarCliente">
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Nome</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="nomeCliente" placeholder="Nome">
+				</div>
+				
+		</div>
+
+		
+
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">CPF</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="cpf" placeholder="CPF">
+				</div>
+				
+		</div>
+
+		
+
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Email</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="email" placeholder="Email">
+				</div>
+				
+		</div>
+	
+		
+	
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Endereço</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="endereco" placeholder="Endereço">
+				</div>
+				
+		</div>
+	
+		
+	
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">CEP</label>
+				<div class="col-md-4">
+					<input required="required" type="number" class="form-control" id="cep" placeholder="CEP">
+				</div>
+				
+		</div>
+	
+		
+
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Bairro</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="bairro" placeholder="Bairro">
+				</div>
+				
+		</div>
+	
+		
+	
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Cidade</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="cidade" placeholder="Cidade">
+				</div>
+				
+		</div>
+
+		
+		
+		
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button id="adicionarCliente" type="submit" class="btn btn-primary col-md-offset-1">Cadastrar</button>
+		</div>
+	</div>
+</form>
+		
+		
+		<!-- Formulario PRODUTO -->
+		<br>
+	<br>
+	<form class="form-horizontal" method="get" id="adicionarProduto">
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Registro do produto</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="registroProduto" placeholder="Registro do produto">
+				</div>
+				
+		</div>
+
+		
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Nome do produto</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="nomeProduto" placeholder="Nome do produto">
+				</div>
+				
+		</div>
+	
+				
+
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Tamanho</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="tamanho" placeholder="Tamanho">
+				</div>
+				
+		</div>
+					
+		
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Quantidade</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="quantidade" placeholder="Quantidade">
+				</div>
+				
+		</div>
+	
+					
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Comprimento</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="comprimento" placeholder="Comprimento">
+				</div>
+				
+		</div>
+	
+		<div class="form-group form-group">
+				<label for="" class="col-md-4 control-label">Modelo</label>
+				<div class="col-md-4">
+					<input required="required" type="text" class="form-control" id="modelo" placeholder="Modelo">
+				</div>
+				
+		</div>
+	
+		
+		
+		
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button id="adicionarProduto" type="submit" class="btn btn-primary col-md-offset-1">Cadastrar</button>
+		</div>
+	</div>
+</form>
+
+		<!--painel CPF-->
+		
+		<div id="painelCpf">
+            
+            <div class="form-group col-md-4">
+                <label>CPF</label>   
+				<div>	
+					<td><input type="text" id="cpF" value="" placeholder="Informe o cpf" /> </td>                 
+                </div>
+            	<button id="buscaCpf" class="btn btn-primary col-md-offset-1">Buscar CPF</button>   
+            </div>
+		</div>
+			
+		<!-- Cpf -->
+
+		<table class="table table-bordered"> 
+			<caption>CPF</caption>
+				<thead>
+					<tr> 
+						<th>Nome do cliente</th>
+					</tr> 
+				</thead> 
+				
+				<tbody id="dadosCliente"> 
+					
+				</tbody> 
+		</table>
+
+		
+		
+		<!-- PAINEL SEPARADO -->
+
+  	<div id="painelBusca">
+  		
+  		<div class="form-group col-md-4">
+                <label>Nome</label>
+                <select id="nomeProduto" class="input-large form-control">
+                    <option value="" selected="selected">Escolha o nome</option>
+                    <option value="corrente">corrente</option>
+                    <option value="pulseira">pulseira</option>
+                    <option value="anel">anel</option>
+                    
+                </select>
+              </div>  		
+
+  		<div class="form-group col-md-4">
+                <label>Tamanho</label>
+                <select id="tamanho" class="input-large form-control">
+                    <option value="" selected="selected">Escolha o tamanho</option>
+                    <option value="100">100</option>
+                    <option value="50">50</option>
+                    <option value="25">25</option>
+                    
+                </select>
+            </div>	
+  		<div class="form-group col-md-4">
+                <label>Quantidade</label>
+                <select id="quantidade" class="input-large form-control">
+                    <option value="" selected="selected">Escolha a quantidade</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    
+                </select>
+            </div>	
+  		<div class="form-group col-md-4">
+                <label>Comprimento</label>
+                <select id="comprimento" class="input-large form-control">
+                    <option value="" selected="selected">Escolha o tamanho</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    
+                </select>
+            </div>
+  		<div class="form-group col-md-4">
+                <label>Modelo</label>
+                <select id="modelo" class="input-large form-control">
+                    <option value="" selected="selected">Escolha o modelo</option>
+                    <option value="cartier">cartier</option>
+                    <option value="3 em 1">3 em 1</option>
+                    <option value="groumet">groumet</option>
+                    
+                </select>
+            </div>
+  	
+		
+		<button id="buscarProduto" class="btn btn-primary col-md-offset-5">Buscar</button>
+		
+		
+		
+		<!-- painel REGISTRO PRODUTO -->
+		
+	
+		<div id="painelRegistro">
+            
+            <div class="form-group col-md-4">
+                <label>Registro</label>   
+				<div>	
+					<td><input type="text" id="produtoRegistro" value="" placeholder="Informe o registro do produto" /> </td>                 
+                </div>
+            	<button id="buscaRegistro" class="btn btn-primary col-md-offset-1">Buscar produto</button>   
+            </div>
+		</div>
+
+		<!-- painel VENDA-->
+		
+	
+		<div id="painelVenda">
+            
+            <div class="form-group col-md-4">
+                <label>Registro da venda</label>   
+				<div>	
+					<td><input type="text" id="vendaRegistro" value="" placeholder="Informe o registro da venda" /> </td>                 
+                </div>
+            	<button id="buscarVenda" class="btn btn-primary col-md-offset-1">Buscar venda</button>   
+            </div>
+		</div>
+		
+		<!-- Venda -->
+		
+		<table class="table table-bordered"> 
+			<caption>Valor</caption>
+				<thead>
+					<tr> 
+						<th>Valor da venda</th>
+					</tr> 
+				</thead> 
+				
+				<tbody id="dadosVenda"> 
+					
+				</tbody> 
+		</table>
+
+		
+		<!-- Produto -->
+		
+		<table class="table table-bordered"> 
+			<caption>Produto</caption>
+				<thead>
+					<tr> 
+						<th>Nome do produto</th>
+						<th>Modelo do produto</th>
+					</tr> 
+				</thead> 
+				
+				<tbody id="dadosRegistro"> 
+					
+				</tbody> 
+		</table>
+		
+
+		
+		<!-- Produtosss -->
+
+		<table class="table table-bordered"> 
+			<caption>Produtos</caption>
+				<thead>
+					<tr> 
+						<th>Nome do produto</th>
+						<th>Tamanho</th> 
+						<th>Quantidade</th> 
+						<th>Comprimento</th> 
+						<th>Modelo</th>
+					</tr> 
+				</thead> 
+				
+				<tbody id="dadosProduto"> 
+					
+				</tbody> 
+		</table>
+		
+
+		
+		
+		
+  </body>
+  
+</html>
